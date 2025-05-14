@@ -8,9 +8,11 @@ from datetime import datetime, timedelta
 st.set_page_config(page_title="Realtime GFS Meteogram", layout="wide")
 
 st.title("📡 GFS Meteogram Viewer (Realtime via NOMADS)")
+st.caption("Web Hasil Pembelajaran Pengelolaan Informasi Meteorologi")
 
 # Sidebar inputs
 st.sidebar.header("⚙️ Pengaturan")
+st.sidebar.caption("Sumber Data : GFS 0.25 Degree Hourly")
 
 # Default: hari ini - 1 agar data sudah tersedia
 default_date = (datetime.utcnow() - timedelta(days=1)).strftime('%Y%m%d')
