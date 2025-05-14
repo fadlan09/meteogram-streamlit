@@ -1,4 +1,5 @@
-import streamlit as st
+# Update app.py content to calculate hourly rainfall instead of cumulative
+updated_app_py_content = '''import streamlit as st
 import xarray as xr
 import pandas as pd
 import numpy as np
@@ -35,11 +36,18 @@ if st.sidebar.button("🔍 Generate Meteogram"):
         time = pd.to_datetime(ds_loc.time.values)
         temp = ds_loc.tmp2m - 273.15  # °C
         rh = ds_loc.rh2m
-        rain = ds_loc.apcpsfc
         cloud = ds_loc.tcdcclm
         wind_u = ds_loc.ugrd10m
         wind_v = ds_loc.vgrd10m
         wind_speed = np.sqrt(wind_u**2 + wind_v**2)
+
+        # Curah hujan akumulatif dari GFS
+        rain_acc = ds_loc.apcpsfc
+
+        # Hitung curah hujan per jam
+        rain_hourly = rain_acc.diff(dim='time', label='upper')
+        rain_hourly = rain_hourly.reindex(time=rain_acc.time[1:])
+        rain_time = pd.to_datetime(rain_hourly.time.values)
 
         # Plotly chart
         fig = go.Figure()
@@ -47,7 +55,7 @@ if st.sidebar.button("🔍 Generate Meteogram"):
         fig.add_trace(go.Scatter(x=time, y=rh, name="RH (%)", line=dict(color='blue')))
         fig.add_trace(go.Scatter(x=time, y=wind_speed, name="Wind (m/s)", line=dict(color='green')))
         fig.add_trace(go.Scatter(x=time, y=cloud, name="Cloud Cover (%)", line=dict(color='gray', dash='dot')))
-        fig.add_trace(go.Bar(x=time, y=rain, name="Rain (mm/hr)", marker_color='cyan'))
+        fig.add_trace(go.Bar(x=rain_time, y=rain_hourly, name="Rain (mm/hr)", marker_color='cyan'))
 
         fig.update_layout(
             title=f"Meteogram @ Lat {lat:.2f}, Lon {lon:.2f} | GFS {date} {hour}Z",
@@ -61,3 +69,11 @@ if st.sidebar.button("🔍 Generate Meteogram"):
 
     except Exception as e:
         st.error(f"Terjadi kesalahan saat mengambil atau memproses data: {str(e)}")
+'''
+
+# Overwrite the app.py file
+app_path = "/mnt/data/meteogram-streamlit/app.py"
+with open(app_path, "w") as f:
+    f.write(updated_app_py_content)
+
+app_path
