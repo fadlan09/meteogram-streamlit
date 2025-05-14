@@ -1,5 +1,5 @@
 # Update app.py content to calculate hourly rainfall instead of cumulative
-updated_app_py_content = '''import streamlit as st
+import streamlit as st
 import xarray as xr
 import pandas as pd
 import numpy as np
