@@ -20,7 +20,7 @@ default_date = (datetime.utcnow() - timedelta(days=1)).strftime('%Y%m%d')
 date = st.sidebar.text_input("Tanggal Model (YYYYMMDD)", value=default_date)
 hour = st.sidebar.selectbox("Jam Model (UTC)", options=["00", "06", "12", "18"], index=0)
 
-lat = st.sidebar.number_input("Latitude", value=-6.2, format="%.2f")
+lat = st.sidebar.number_input("Latitude (tanda (-) untuk LS)", value=-6.2, format="%.2f")
 lon = st.sidebar.number_input("Longitude", value=106.8, format="%.2f")
 
 if st.sidebar.button("🔍 Generate Meteogram"):
